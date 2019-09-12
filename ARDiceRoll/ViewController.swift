@@ -116,5 +116,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Pause the view's session
         sceneView.session.pause()
     }
+    
+    //Delegate method that detects touches
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touchResponse = touches.first {
+            let touchLocation = touchResponse.location(in: sceneView) //Location expects a node, and we use our sceneView bc thats where the touch event is initiated
+            
+            //hittest searches for real world objects/anchors and takes the 2D point from the sceneView into a 3D coordinate
+            //touchResults is an array type
+            let touchResults = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
+            
+            if !touchResults.isEmpty{
+                print("Touch detected on plane")
+            } else {
+                print("touched not on plane")
+            }
+        }
+    }
 
 }
