@@ -54,15 +54,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         sceneView.autoenablesDefaultLighting = true
         
-//        // Create a new scene using ship.scn file
-//        let diceScene = SCNScene(named: "art.scnassets/diceCollada.scn")!
-//
-//        //Recursively will keep looking through the childNodes till it finds the right node
-//        if let diceNode = diceScene.rootNode.childNode(withName: "Dice", recursively: true){
-//
-//        diceNode.position = SCNVector3(x: 0, y: 0, z: -0.1)
-//        sceneView.scene.rootNode.addChildNode(diceNode)
-//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,11 +117,30 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             //touchResults is an array type
             let touchResults = sceneView.hitTest(touchLocation, types: .existingPlaneUsingExtent)
             
-            if !touchResults.isEmpty{
-                print("Touch detected on plane")
-            } else {
-                print("touched not on plane")
+            if let hitResult = touchResults.first {
+                //print(hitResult)
+                // Create a new scene using ship.scn file
+                let diceScene = SCNScene(named: "art.scnassets/diceCollada.scn")!
+        
+                //Recursively will keep looking through the childNodes till it finds the right node
+                if let diceNode = diceScene.rootNode.childNode(withName: "Dice", recursively: true){
+        
+                //World Transform is a 4x4 matrix of data that was given from our hitResult
+                //The coordinates to place our object are in the 4th column
+                diceNode.position = SCNVector3(x: hitResult.worldTransform.columns.3.x,
+                                               y: hitResult.worldTransform.columns.3.y + diceNode.boundingSphere.radius,
+                                               z: hitResult.worldTransform.columns.3.z)
+                    
+                sceneView.scene.rootNode.addChildNode(diceNode)
+                }
+
             }
+            
+//            if !touchResults.isEmpty{
+//                print("Touch detected on plane")
+//            } else {
+//                print("touched not on plane")
+//            }
         }
     }
 
