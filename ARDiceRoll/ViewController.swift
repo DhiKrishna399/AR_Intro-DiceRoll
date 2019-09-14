@@ -12,6 +12,7 @@ import ARKit
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
+    var diceArray = [SCNNode]()
     @IBOutlet var sceneView: ARSCNView!
     
     override func viewDidLoad() {
@@ -131,7 +132,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                                                y: hitResult.worldTransform.columns.3.y + diceNode.boundingSphere.radius,
                                                z: hitResult.worldTransform.columns.3.z)
                     
+                diceArray.append((diceNode))
+                    
                 sceneView.scene.rootNode.addChildNode(diceNode)
+                    
+                roll(dice: diceNode)
+                    
                 }
 
             }
@@ -142,6 +148,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 //                print("touched not on plane")
 //            }
         }
+    }
+    
+    func rollAllDice(){
+        if !diceArray.isEmpty {
+            for dice in diceArray {
+                roll(dice:dice)
+            }
+        }
+    }
+    
+    @IBAction func rollDiceAgain(_ sender: UIBarButtonItem) {
+        rollAllDice()
+    }
+    
+    func roll(dice: SCNNode){
+        //Rotate along X-axis and have
+        let randomXPos = Float(arc4random_uniform(4) + 1) * (Float.pi/2)
+        let randomZPos = Float(arc4random_uniform(4) + 1) * (Float.pi/2)
+        
+        //Animation creation
+        dice.runAction(SCNAction.rotateBy(x: CGFloat(randomXPos * 5), y: 0, z: CGFloat(randomZPos * 5), duration: 0.5))
     }
 
 }
