@@ -162,6 +162,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         rollAllDice()
     }
     
+    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+        rollAllDice()
+    }
+    
     func roll(dice: SCNNode){
         //Rotate along X-axis and have
         let randomXPos = Float(arc4random_uniform(4) + 1) * (Float.pi/2)
@@ -170,5 +174,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //Animation creation
         dice.runAction(SCNAction.rotateBy(x: CGFloat(randomXPos * 5), y: 0, z: CGFloat(randomZPos * 5), duration: 0.5))
     }
-
+    
+    
+    @IBAction func deleteAllDice(_ sender: UIBarButtonItem) {
+        if !diceArray.isEmpty {
+            for dice in diceArray{
+                dice.removeFromParentNode()
+            }
+        }
+    }
+    
 }
